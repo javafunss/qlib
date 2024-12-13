@@ -10,7 +10,7 @@ benchmark: &benchmark XAUUSD
 data_handler_config: &data_handler_config
   start_time: 2022-01-01
   # 1min closing time is 15:00:00
-  end_time: 2024-12-20
+  end_time: 2024-11-20
   fit_start_time: 2023-01-01
   fit_end_time: 2023-12-20
   instruments: *market
@@ -36,7 +36,7 @@ port_analysis_config: &port_analysis_config
       n_drop: 5
   backtest:
     start_time: 2024-01-01
-    end_time: 2024-12-20
+    end_time: 2024-11-20
     account: 10000
     benchmark: *benchmark
     exchange_kwargs:
@@ -70,7 +70,7 @@ task:
       segments:
         train: [2022-01-01, 2022-12-20]
         valid: [2023-01-01, 2023-12-20]
-        test: [2024-01-01, 2024-12-20]
+        test: [2024-01-01, 2024-11-20]
   record:
     - class: SignalRecord
       module_path: qlib.workflow.record_temp
