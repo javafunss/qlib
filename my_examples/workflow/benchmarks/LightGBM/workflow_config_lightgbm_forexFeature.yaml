@@ -1,0 +1,98 @@
+qlib_init:
+  provider_uri: "~/.qlib/qlib_data/forex_data_1min" # 您的外汇数据路径
+  region: global
+
+market: &market forex_market # 自定义市场名称
+benchmark: &benchmark EUR/USD # 参考外汇货币对作为基准
+
+data_handler_config: &data_handler_config
+  start_time: 2020-01-01
+  end_time: 2023-01-01
+  instruments: *market
+  data_loader:
+    class: CustomForexDataLoader # 使用您实现的 DataLoader
+    kwargs:
+      config:
+        price:
+          windows: [0, 1, 2]
+          feature: ["OPEN", "HIGH", "LOW", "CLOSE", "VWAP"]
+        rolling:
+          windows: [5, 10, 20]
+          include: ["MA", "STD", "ROC"]
+        ta_lib: # whether to use ta-lib based features
+          { windows: [14, 20], indicators: { atr: { # ta-lib windows size
+                    multiplier: 1, # multiplier for ATR
+                  }, boll: {
+                    k: 2, # multiplier for BOLL bands
+                  }, rsi: {} } } # RSI configuration
+      freq: 1min # 分钟级别数据
+
+  learn_processors:
+    - class: DropnaLabel
+    - class: CSZScoreNorm # 数据标准化
+      kwargs:
+        fields_group: label
+
+port_analysis_config: &port_analysis_config
+  strategy:
+    class: TopkDropoutStrategy
+    module_path: qlib.contrib.strategy
+    kwargs:
+      signal: <PRED> # 使用预测信号
+      topk: 10
+      n_drop: 2
+  backtest:
+    start_time: 2022-01-01
+    end_time: 2023-01-01
+    account: 100000
+    benchmark: *benchmark
+    exchange_kwargs:
+      limit_threshold: 0.01 # 外汇交易的限价
+      deal_price: close
+      open_cost: 0.0002 # 交易成本（点差）
+      close_cost: 0.0002
+      min_cost: 1
+
+task:
+  model:
+    class: LGBModel
+    module_path: qlib.contrib.model.gbdt
+    kwargs:
+      loss: mse
+      colsample_bytree: 0.9
+      learning_rate: 0.1
+      subsample: 0.8
+      lambda_l1: 200
+      lambda_l2: 300
+      max_depth: 6
+      num_leaves: 50
+      num_threads: 10
+
+  dataset:
+    class: DatasetH
+    module_path: qlib.data.dataset
+    kwargs:
+      handler:
+        class: DataHandlerLP
+        module_path: qlib.data.dataset.handler
+        kwargs: *data_handler_config
+      segments:
+        train: [2020-01-01, 2021-12-31]
+        valid: [2022-01-01, 2022-06-30]
+        test: [2022-07-01, 2023-01-01]
+
+  record:
+    - class: SignalRecord
+      module_path: qlib.workflow.record_temp
+      kwargs:
+        model: <MODEL>
+        dataset: <DATASET>
+    - class: SigAnaRecord
+      module_path: qlib.workflow.record_temp
+      kwargs:
+        ana_long_short: False # 外汇市场一般不区分多头/空头收益
+        ann_scaler: 252
+    - class: PortAnaRecord
+      module_path: qlib.workflow.record_temp
+      kwargs:
+        config: *port_analysis_config

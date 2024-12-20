@@ -183,7 +183,8 @@ _default_config = {
         "class": "MLflowExpManager",
         "module_path": "qlib.workflow.expm",
         "kwargs": {
-            "uri": "file:" + str(Path(os.getcwd()).resolve() / "mlruns"),
+            # "uri": "file:" + str(Path(os.getcwd()).resolve() / "mlruns"),
+            "uri:": "~/.qlib/mlruns",
             "default_exp_name": "Experiment",
         },
     },
@@ -221,7 +222,7 @@ MODE_CONF = {
         # cache
         "expression_cache": DISK_EXPRESSION_CACHE,
         "dataset_cache": DISK_DATASET_CACHE,
-        "local_cache_path": Path("~/.cache/qlib_simple_cache").expanduser().resolve(),
+        "local_cache_path": Path("~/.qlib/.cache/qlib_simple_cache").expanduser().resolve(),
         "mount_path": None,
     },
     "client": {
@@ -232,7 +233,7 @@ MODE_CONF = {
         # Disable cache by default. Avoid introduce advanced features for beginners
         "dataset_cache": None,
         # SimpleDatasetCache directory
-        "local_cache_path": Path("~/.cache/qlib_simple_cache").expanduser().resolve(),
+        "local_cache_path": Path("~/.qlib/.cache/qlib_simple_cache").expanduser().resolve(),
         # client config
         "mount_path": None,
         "auto_mount": False,  # The nfs is already mounted on our server[auto_mount: False].
