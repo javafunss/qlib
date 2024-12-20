@@ -30,6 +30,7 @@ We have prepared several demo videos for you:
 
 | Feature | Status |
 | --                      | ------    |
+| BPQP for End-to-end learning | 📈Coming soon!([Under review](https://github.com/microsoft/qlib/pull/1863)) |
 | 🔥LLM-driven Auto Quant Factory🔥 | 🚀 Released in [♾️RD-Agent](https://github.com/microsoft/RD-Agent) on Aug 8, 2024 |
 | KRNN and Sandwich models | :chart_with_upwards_trend: [Released](https://github.com/microsoft/qlib/pull/1414/) on May 26, 2023 |
 | Release Qlib v0.9.0 | :octocat: [Released](https://github.com/microsoft/qlib/releases/tag/v0.9.0) on Dec 9, 2022 |
@@ -152,11 +153,11 @@ Here is a quick **[demo](https://terminalizer.com/view/3f24561a4470)** shows how
 ## Installation
 
 This table demonstrates the supported Python version of `Qlib`:
-|               | install with pip           | install from source  | plot |
-| ------------- |:---------------------:|:--------------------:|:----:|
+|               | install with pip      | install from source  |        plot        |
+| ------------- |:---------------------:|:--------------------:|:------------------:|
 | Python 3.7    | :heavy_check_mark:    | :heavy_check_mark:   | :heavy_check_mark: |
 | Python 3.8    | :heavy_check_mark:    | :heavy_check_mark:   | :heavy_check_mark: |
-| Python 3.9    | :x:                   | :heavy_check_mark:   | :x: |
+| Python 3.9    | :x:                   | :heavy_check_mark:   | :x:                |
 
 **Note**: 
 1. **Conda** is suggested for managing your Python environment. In some cases, using Python outside of a `conda` environment may result in missing header files, causing the installation failure of certain packages.
@@ -357,7 +358,7 @@ Qlib provides a tool named `qrun` to run the whole workflow automatically (inclu
     ```
     Here are detailed documents for `qrun` and [workflow](https://qlib.readthedocs.io/en/latest/component/workflow.html).
 
-2. Graphical Reports Analysis: Run `examples/workflow_by_code.ipynb` with `jupyter notebook` to get graphical reports
+2. Graphical Reports Analysis: First, run `python -m pip install .[analysis]` to install the required dependencies. Then run `examples/workflow_by_code.ipynb` with `jupyter notebook` to get graphical reports. 
     - Forecasting signal (model prediction) analysis
       - Cumulative Return of groups
       ![Cumulative Return](https://github.com/microsoft/qlib/blob/main/docs/_static/img/analysis/analysis_model_cumulative_return.png)
